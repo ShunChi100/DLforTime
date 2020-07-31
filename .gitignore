@@ -62,7 +62,7 @@ env.bak/
 venv.bak/
 
 # Data folder
-./Data/
+Data_Folder/
 
 # checkpoint folder
-./Checkpoints/
+Checkpoint_Folder/
