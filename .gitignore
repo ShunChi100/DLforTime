@@ -60,3 +60,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Data folder
+./Data/
+
+# checkpoint folder
+./Checkpoints/
