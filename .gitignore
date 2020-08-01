@@ -66,3 +66,7 @@ Data_Folder/
 
 # checkpoint folder
 Checkpoint_Folder/
+
+# pytorch lightning
+**/lightning_logs/
+notebooks/lightning_logs/

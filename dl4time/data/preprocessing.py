@@ -16,12 +16,11 @@ class MinMaxTransformation:
 
         for index in range(len(data_scaled) - self.look_back): 
             data.append(data_scaled[index: (index + self.look_back+1)])
-        data = np.array(data);
-        
+        data = np.array(data)
         
         val_set_size = int(np.round(0.1*data.shape[0]))
-        test_set_size = int(np.round(0.2*data.shape[0]));
-        train_set_size = data.shape[0] - (val_set_size + test_set_size);
+        test_set_size = int(np.round(0.2*data.shape[0]))
+        train_set_size = data.shape[0] - (val_set_size + test_set_size)
 
         x_train = data[:train_set_size,:-1,:]
         y_train = data[:train_set_size,-1,:]
@@ -40,7 +39,7 @@ class MinMaxTransformation:
     
     
 class NormalizationCurrentDay:
-        def __init__(self, look_back=60):
+    def __init__(self, look_back=60):
         self.look_back = look_back
      
     def fit_transform(self, data_raw):

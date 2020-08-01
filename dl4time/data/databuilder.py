@@ -1,3 +1,4 @@
+import torch
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
@@ -20,20 +21,21 @@ class StockDataset(Dataset):
         return X, y 
 
 class StockData:
-    def __init__(self, symbol, dates, transformation):
+    def __init__(self, symbol, dates, transformation, data_path="../Data_Folder/Stocks"):
         self.symbol = symbol.lower()
         self.dates = dates
         self.transformation = transformation
+        self.data_path = data_path
         
         self.data_raw = self._load_data()
         self.data = self._build_data()
         self.y_true = None
         self.y_pred = None
     
-    def _load_data(self):
+    def _load_data(self, ):
         stocks_raw = {}
         df_dates = pd.DataFrame(index=self.dates)
-        data_raw = pd.read_csv(f"../input/Data/Stocks/{self.symbol}.us.txt", parse_dates=True, index_col=0)
+        data_raw = pd.read_csv(f"{self.data_path}/{self.symbol}.us.txt", parse_dates=True, index_col=0)
         data_raw = df_dates.join(data_raw, how='inner')
         data_raw = data_raw[['Close']].fillna(method='ffill')
         return data_raw
@@ -51,7 +53,7 @@ class StockData:
         model.eval()
         device = next(model.parameters()).device
         for split in data_split:
-            x_split = torch.from_numpy(stock.data[split[0]].astype(np.float32)).to(device)
+            x_split = torch.from_numpy(self.data[split[0]].astype(np.float32)).to(device)
             y_pred[split[1][2:]] = model(x_split).detach().to("cpu").numpy()
 #         for key in y_pred:
 #             y_pred[key] = self.transformation.inverse_transform(y_pred[key]).flatten()
@@ -121,12 +123,13 @@ class StockData:
 
         
 class StockData_ensemble:
-    def __init__(self, symbols, dates, transformation, max_num=100000000000):
+    def __init__(self, symbols, dates, transformation, max_num=100000000000, data_path="../Data_Folder/Stocks"):
         self.symbols = [symbol.lower() for symbol in symbols]
         self.dates = dates
         self.transformation = transformation
         self.symbols_used = []
         self.max_num = max_num
+        self.data_path = data_path
         
         self.data = self._build_data()
         
@@ -135,7 +138,7 @@ class StockData_ensemble:
         data = {}
         for symbol in self.symbols:
             try:
-                single_stock = StockData(symbol, dates, transformation=self.transformation)
+                single_stock = StockData(symbol, self.dates, transformation=self.transformation, data_path = self.data_path)
             except:
                 continue
             if np.mean(single_stock.data_raw['Close'].iloc[0:100]) < 2:
