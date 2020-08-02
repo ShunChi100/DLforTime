@@ -28,7 +28,7 @@ class Model(LightningModule):
     
     def train_dataloader(self):
         
-        train_dataset = StockDataset(self.data_container .data['x_train'], self.data_container .data['y_train'])
+        train_dataset = StockDataset(self.data_container.data['x_train'], self.data_container.data['y_train'])
         
         return DataLoader(train_dataset, shuffle=True, **self.dataloader_params)
     
@@ -59,7 +59,7 @@ class Model(LightningModule):
         return {'val_loss': avg_loss, 'log': tensorboard_logs}
 
     def val_dataloader(self):
-        val_dataset = StockDataset(self.data_container .data['x_val'], self.data_container .data['y_val'])
+        val_dataset = StockDataset(self.data_container.data['x_val'], self.data_container.data['y_val'])
         return DataLoader(val_dataset, shuffle=False, **self.dataloader_params)
         
     def test_step(self, batch, batch_idx):
@@ -74,5 +74,5 @@ class Model(LightningModule):
         return {'test_loss': avg_loss, 'log': tensorboard_logs}
 
     def test_dataloader(self):
-        test_dataset = StockDataset(self.data_container .data['x_test'], self.data_container .data['y_test'])
+        test_dataset = StockDataset(self.data_container.data['x_test'], self.data_container.data['y_test'])
         return DataLoader(test_dataset, shuffle=False, **self.dataloader_params)
