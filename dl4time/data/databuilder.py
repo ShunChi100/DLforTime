@@ -21,23 +21,24 @@ class StockDataset(Dataset):
         return X, y 
 
 class StockData:
-    def __init__(self, symbol, dates, transformation, data_path="../Data_Folder/Stocks"):
+    def __init__(self, symbol, dates, transformation, data_path="../Data_Folder/Stocks", features=['Close']):
         self.symbol = symbol.lower()
         self.dates = dates
         self.transformation = transformation
         self.data_path = data_path
+        self.features = features
         
         self.data_raw = self._load_data()
         self.data = self._build_data()
         self.y_true = None
         self.y_pred = None
     
-    def _load_data(self, ):
+    def _load_data(self):
         stocks_raw = {}
         df_dates = pd.DataFrame(index=self.dates)
         data_raw = pd.read_csv(f"{self.data_path}/{self.symbol}.us.txt", parse_dates=True, index_col=0)
         data_raw = df_dates.join(data_raw, how='inner')
-        data_raw = data_raw[['Close']].fillna(method='ffill')
+        data_raw = data_raw[self.features].fillna(method='ffill')
         return data_raw
     
     def _build_data(self):
